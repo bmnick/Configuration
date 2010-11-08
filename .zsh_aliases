@@ -13,9 +13,6 @@ alias irb='irb --readline -r irb/completion'
 # vlc cli on a mac
 alias vlc="/Applications/VLC.app/Contents/MacOS/VLC"
 
-# Get the passwords for my keys set up
-alias sshpw="ssh-agent sh -c 'ssh-add < /dev/null && bash'"
-
 # Make it easy to work with mq versioning
 alias mq='hg -R `hg root`/.hg/patches'
 alias mqc='hg -R `hg root`/.hg/patches commit -m "`date`"'
@@ -23,11 +20,6 @@ alias mqc='hg -R `hg root`/.hg/patches commit -m "`date`"'
 alias search='mdfind -onlyin .'
 
 function csearch {
-#	local num
-#	$num=3
-#	if [ "$#" > "2" ]; then
-#		$num=$2
-#	fi
 	mdfind -onlyin . -0 $1 | xargs -0 grep -C 6 --color=always $1 | sed s=`pwd`=.=
 }
 
@@ -73,25 +65,6 @@ alias e='exit'
 alias s='sudo'
 alias p='ps aux'
 alias gc='git clone'
-
-#-----------------------------------------------------------------------------#
-#----------------------------Remote Server Aliases----------------------------#
-
-# common ssh aliases
-alias zim='echo "zim" && ssh ben@benson.mine.nu'
-alias hilly='echo "hilly" && ssh bmn1826@hilly.cs.rit.edu'
-alias holly='echo "holly" && ssh bmn1826@holly.cs.rit.edu'
-alias queeg='echo "queeg" && ssh bmn1826@queeg.cs.rit.edu'
-alias linus='echo "linus" && ssh bmn1826@linus.se.rit.edu'
-alias wolverine='ssh seburdis@wolverine.dreamhost.com'
-
-# common ftp aliases
-alias hillyftp='echo "FTP to hilly" && sftp bmn1826@hilly.cs.rit.edu'
-alias hollyftp='echo "FTP to holly" && sftp bmn1826@holly.cs.rit.edu'
-alias queegftp='echo "FTP to queeg" && sftp bmn1826@queeg.cs.rit.edu'
-alias linusftp='echo "FTP to linus" && sftp bmn1826@linus.se.rit.edu'
-alias zimftp='echo "FTP to zim" && sftp -o PORT=3602 ben@benson.mine.nu'
-
 
 #-----------------------------------------------------------------------------#
 #----------------------------Command Combinations-----------------------------#
@@ -158,6 +131,5 @@ function most_used {
 export dev=/Users/ben/Development
 export exercises=/Users/ben/Development/Exercises
 export kata=/Users/ben/Development/Exercises/Katas
-export rtt="/Users/ben/Development/Tech Talks/railsdoneright"
 
 export tools=/Users/ben/Development/Tools

@@ -49,12 +49,6 @@ export AUTOFEATURE=true
 # Set up jruby
 export JRUBYBIN=/Users/ben/Development/Tools/jruby/bin
 
-# For Primavera, increase the ant heap size
-export ANT_HOME="/usr/share/ant"
-export ANT_OPTS="-Xmx1024M -Dant.logger.defaults=/Users/ben/Applications/antcolors.properties"
-export ANT_ARGS="-logger org.apache.tools.ant.listener.AnsiColorLogger"
-export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
-
 # Fix python path for artoo
 export PYTHONPATH=/Library/Python/2.6/site-packages
 
@@ -62,7 +56,6 @@ export PYTHONPATH=/Library/Python/2.6/site-packages
 export JPDA_TRANSPORT=dt_socket
 export JPDA_ADDRESS=7777
 export VMARGS="-Djava.compiler=NONE -Xnoagent -Xdebug -Xrunjdwp:transport=dt_socket,address=9988,server=y,suspend=n"
-
 
 # cappucino support
 export CAPPBUILD=/Users/ben/Development/Frameworks/cappbuild/
