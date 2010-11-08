@@ -1,0 +1,80 @@
+[extensions]
+hgext.extdiff =
+rebase = 
+mq =
+hgext.graphlog = 
+prompt = ~/Development/OSS/hg-prompt/prompt.py
+bookmarks =
+hgext.record =
+color = 
+zeroconf=
+pager =
+hgext.purge = 
+hgext.convert = 
+crecord = ~/Development/OSS/crecord
+
+[extdiff]
+cmd.opendiff = fmdiff
+
+[ui]
+username=Ben Nicholas <ben@ben-nicholas.com>
+ignore=~/.hgignore
+verbose = true
+
+[alias]
+slog 	= log -l10 --style=/Development/OSS/mercurial-cli-templates/map-cmdline.slog
+nlog 	= log --style=/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+sglog 	= glog --style=/Development/OSS/mercurial-cli-templates/map-cmdline.sglog
+dlog 	= log --style=/Development/OSS/mercurial-cli-templates/map-cmdline.dlog
+sout 	= outgoing --style=/Development/OSS/mercurial-cli-templates/map-cmdline.slog
+sin 	= incoming --style=/Development/OSS/mercurial-cli-templates/map-cmdline.slog
+stip 	= tip --style=/Development/OSS/mercurial-cli-templates/map-cmdline.slog
+nout 	= outgoing --style=/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+nin 	= incoming --style=/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+ntip 	= tip --style=/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+
+[diff]
+git = true
+
+[merge-tools]
+# Override stock tool location
+fm.executable = fmmerge
+# Specify command line
+fm.args = $base $other $local $output
+# Give higher priority
+fm.priority = 1
+
+[pager]
+pager = less -FRX
+ignore = version
+
+[bookmarks]
+track.current = True
+
+[hooks]
+commit.growl 			= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Committed $HG_NODE"
+post-update.growl 		= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Completed Mercurial update"
+changegroup.growl 		= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Completed Mercurial pull/clone"
+post-push.growl 		= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Completed Mercurial push"
+post-rebase.growl 		= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Completed Mercurial rebase"
+post-qrefresh.mqcommit 	= hg addremove --mq && hg commit --mq -m "Snapshot at: `date` with parent revision: `hg identify -r qparent`"
+
+[color]
+status.modified = cyan bold
+status.added = green bold
+status.removed = red bold
+status.deleted = cyan bold
+status.unknown = blue bold
+status.ignored = white bold
+qseries.applied = blue bold
+qseries.unapplied = green bold
+qseries.missing = red bold
+diff.diffline = bold
+diff.extended = cyan bold
+diff.file_a = red bold
+diff.file_b = green bold
+diff.hunk = magenta
+diff.deleted = red
+diff.inserted = green
+diff.changed = white
+diff.trailingwhitespace = bold red_background
