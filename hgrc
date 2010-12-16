@@ -1,6 +1,5 @@
 [extensions]
 hgext.extdiff =
-rebase = 
 mq =
 hgext.graphlog = 
 prompt = ~/Development/OSS/hg-prompt/prompt.py
@@ -12,6 +11,8 @@ pager =
 hgext.purge = 
 hgext.convert = 
 crecord = ~/Development/OSS/crecord
+fetch = 
+mercurial_keyring = 
 
 [extdiff]
 cmd.opendiff = fmdiff
@@ -78,3 +79,7 @@ diff.deleted = red
 diff.inserted = green
 diff.changed = white
 diff.trailingwhitespace = bold red_background
+
+[web]
+allow_push=*
+push_ssl=false
