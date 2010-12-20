@@ -23,16 +23,16 @@ ignore=~/.hgignore
 verbose = true
 
 [alias]
-slog 	= log -l10 --style=/Development/OSS/mercurial-cli-templates/map-cmdline.slog
-nlog 	= log --style=/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
-sglog 	= glog --style=/Development/OSS/mercurial-cli-templates/map-cmdline.sglog
-dlog 	= log --style=/Development/OSS/mercurial-cli-templates/map-cmdline.dlog
-sout 	= outgoing --style=/Development/OSS/mercurial-cli-templates/map-cmdline.slog
-sin 	= incoming --style=/Development/OSS/mercurial-cli-templates/map-cmdline.slog
-stip 	= tip --style=/Development/OSS/mercurial-cli-templates/map-cmdline.slog
-nout 	= outgoing --style=/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
-nin 	= incoming --style=/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
-ntip 	= tip --style=/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+slog 	= log -l10 --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.slog
+nlog 	= log --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+sglog 	= glog --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.sglog
+dlog 	= log --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.dlog
+sout 	= outgoing --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.slog
+sin 	= incoming --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.slog
+stip 	= tip --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.slog
+nout 	= outgoing --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+nin 	= incoming --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+ntip 	= tip --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
 
 [diff]
 git = true
