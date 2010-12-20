@@ -30,4 +30,16 @@ else
 	fi
 fi
 
-`which git` clone git://github.com/bmnick/Configuration.git ~/config
+echo ""
+echo "************************************************************"
+echo "* Starting to pull down config files                       *"
+echo "************************************************************"
+echo ""                                            
+
+if [ -f ~/config ]; then
+        pushd ~/config && git pull && popd
+else
+        `which git` clone git://github.com/bmnick/Configuration.git ~/config
+fi
+exec ~/config/link.sh
+
