@@ -36,10 +36,18 @@ echo "* Starting to pull down config files                       *"
 echo "************************************************************"
 echo ""                                            
 
+# pull down main repo
 if [ -f ~/config ]; then
         pushd ~/config && git pull && popd
 else
         `which git` clone git://github.com/bmnick/Configuration.git ~/config
 fi
+
+# pull down submodules
+pushd ~/config
+`which git` submodule init
+`which git` submodule update
+popd
+
 exec ~/config/link.sh
 
