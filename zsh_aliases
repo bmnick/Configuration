@@ -1,33 +1,9 @@
 #-----------------------------------------------------------------------------#
 #----------------------------Command defaults---------------------------------#
 
-# a test for connectivity using ping
-alias pingtest='ping -c 3 www.google.com'
-
-# X app aliases
-alias xterm='xterm -bg black -fg white'
-
-# Ruby help
-alias irb='irb --readline -r irb/completion'
-
-# vlc cli on a mac
-alias vlc="/Applications/VLC.app/Contents/MacOS/VLC"
-
-# Get the passwords for my keys set up
-alias sshpw="ssh-agent sh -c 'ssh-add < /dev/null && bash'"
-
-# Make it easy to work with mq versioning
-alias mq='hg -R `hg root`/.hg/patches'
-alias mqc='hg -R `hg root`/.hg/patches commit -m "`date`"'
-
 alias search='mdfind -onlyin .'
 
 function csearch {
-#	local num
-#	$num=3
-#	if [ "$#" > "2" ]; then
-#		$num=$2
-#	fi
 	mdfind -onlyin . -0 $1 | xargs -0 grep -C 6 --color=always $1 | sed s=`pwd`=.=
 }
 
@@ -35,12 +11,13 @@ function tgrep {
 	grep -r "$@" .
 }
 
-if [ -d "/Applications" ]; then
-	alias python="/usr/local/bin/python2.6"
-fi
+function openbyname {
+	find . -name "$@" | xargs -n 1 open
+}
 
 alias grep="grep --color=always"
 alias cgrep="grep -C 3"
+alias igrep="grep -i"
 
 alias q="qlmanage -p"
 
@@ -49,7 +26,7 @@ alias q="qlmanage -p"
 
 # Enable Background colors for OS X
 alias ls='ls -G'
-
+alias cs.='cs ..'
 alias c.='cd ..'
 alias ll='ls -l'
 alias la='ls -a'
@@ -66,34 +43,13 @@ if [ -d "/Applications" ]; then
 else
 	alias v='vim'
 fi
+alias f='find . -name'
 alias mk='make'
 alias mkc='make clean'
 alias mkr='make realclean'
 alias e='exit'
 alias s='sudo'
 alias p='ps aux'
-alias gc='git clone'
-
-alias finder='osascript ~/Applications/Go\ To\ Finder.scpt'
-
-#-----------------------------------------------------------------------------#
-#----------------------------Remote Server Aliases----------------------------#
-
-# common ssh aliases
-alias zim='echo "zim" && ssh ben@benson.mine.nu'
-alias hilly='echo "hilly" && ssh bmn1826@hilly.cs.rit.edu'
-alias holly='echo "holly" && ssh bmn1826@holly.cs.rit.edu'
-alias queeg='echo "queeg" && ssh bmn1826@queeg.cs.rit.edu'
-alias linus='echo "linus" && ssh bmn1826@linus.se.rit.edu'
-alias wolverine='ssh seburdis@wolverine.dreamhost.com'
-
-# common ftp aliases
-alias hillyftp='echo "FTP to hilly" && sftp bmn1826@hilly.cs.rit.edu'
-alias hollyftp='echo "FTP to holly" && sftp bmn1826@holly.cs.rit.edu'
-alias queegftp='echo "FTP to queeg" && sftp bmn1826@queeg.cs.rit.edu'
-alias linusftp='echo "FTP to linus" && sftp bmn1826@linus.se.rit.edu'
-alias zimftp='echo "FTP to zim" && sftp -o PORT=3602 ben@benson.mine.nu'
-
 
 #-----------------------------------------------------------------------------#
 #----------------------------Command Combinations-----------------------------#
@@ -113,13 +69,13 @@ function mcs {
 	ls
 }
 
+function lmv() {
+	[ -e $1 -a -e $2 ] && mv $1 $2 && ln -s $2/$(basename $1) $(dirname $1);
+}
+
 function longrun {
 	$@
 	/usr/local/bin/growlnotify -a Terminal -t "Long running command finished" -m "`echo $@` just finished." > /dev/null 2>&1
-}
-
-function lmv() {
-	[ -e $1 -a -e $2 ] && mv $1 $2 && ln -s $2/$(basename $1) $(dirname $1);
 }
 
 function growltail {
@@ -133,33 +89,13 @@ function growltail {
    tail -fn1 "$1" | ~/Applications/callgrowl.sh "$title"
 }
 
-function waitforupdate {
-   # Do an inital incoming check
-   hg incoming
-   
-   # loop waiting until there are incomings
-   while [[ "$?"  -ne "0" ]]; do
-      sleep 60
-      hg incoming
-   done
-
-   # Notify that there are changes
-   /usr/local/bin/growlnotify -a Murky -t "Mercurial Changes" -m "Changes are available for Repository" > /dev/null 2>&1
-}
-
 #-----------------------------------------------------------------------------#
 #----------------------------Maintenance functions----------------------------#
 
 function most_used {
-	history | awk '{print $2}' | awk 'BEGIN {FS="|"}{print $1}' | sort | uniq -c | sort -n | tail | sort -nr
+	history | awk '{print $2 $3}' | awk 'BEGIN {FS="|"}{print $1}' | sort | uniq -c | sort -n | tail | sort -nr
 }
 
 #-----------------------------------------------------------------------------#
 #----------------------------Directory ALiases--------------------------------#
 
-export dev=/Users/ben/Development
-export exercises=/Users/ben/Development/Exercises
-export kata=/Users/ben/Development/Exercises/Katas
-export rtt="/Users/ben/Development/Tech Talks/railsdoneright"
-
-export tools=/Users/ben/Development/Tools
