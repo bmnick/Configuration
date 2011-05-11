@@ -32,6 +32,3 @@ export GIT_EDITOR="mvim -f --remote-tab-wait +1"
 [[ ( -f ~/.zsh_aliases ) ]] && source ~/.zsh_aliases
 
 [[ ( -f ~/.zsh_machine ) ]] && source ~/.zsh_machine
-
-# Enable RVM necessities
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
