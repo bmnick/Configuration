@@ -29,6 +29,8 @@ export EDITOR="mvim -f --remote-tab-wait"
 # special case for git:
 export GIT_EDITOR="mvim -f --remote-tab-wait +1"
 
+function git(){hub "$@"}
+
 [[ ( -f ~/.zsh_aliases ) ]] && source ~/.zsh_aliases
 
 [[ ( -f ~/.zsh_machine ) ]] && source ~/.zsh_machine
