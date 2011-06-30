@@ -72,6 +72,11 @@ Thumbs.db
 # RVM files
 .rvmrc
 
+# vimfile
+doc/tags
+doc/tags-*
+
 # temporary folders
 syntax: regexp
 .*/te?mp/.*
+
