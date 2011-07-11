@@ -10,15 +10,6 @@ target #git syntax
 dist/**.*
 *.pyc
 
-#Eclipse
-.settings/*.**
-.classpath
-.project
-
-# Netbeans
-nb-configuration.xml
-nbactions.xml
-
 # Temporary files used by the vim editor.
 .*.swp
 # Temporary files used by TextMate
@@ -33,41 +24,6 @@ xcuserdata
 *.svn*
 
 build
-
-[Bb]in/Debug/seteam*
-[Bb]in/Release/seteam*
-[Bb]in/Debug/Ax*
-[Bb]in/Debug/Interop.*
-[Bb]in/Debug/[Ss]plash*
-[Bb]in/Release/Ax*
-[Bb]in/Release/Interop.*
-[Bb]in/Release/[Ss]plash*
-[Bb]in/x86
-[Bb]in/x64
-#ignore thumbnails created by windows
-Thumbs.db
-#Ignore files build by Visual Studio
-*.obj
-*.exe
-*.pdb
-*.user
-*.aps
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.tlb
-*.tlh
-*.cache
-*.ilk
-*.log
-*.lib
-*.sbr
-obj/
-_ReSharper*/
-[Tt]est[Rr]esult*
 
 # Random OS stuff
 .DS_Store
