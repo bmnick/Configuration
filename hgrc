@@ -2,7 +2,6 @@
 hgext.extdiff =
 mq =
 hgext.graphlog = 
-prompt = ~/Development/OSS/hg-prompt/prompt.py
 bookmarks =
 hgext.record =
 color = 
@@ -10,9 +9,7 @@ zeroconf=
 pager =
 hgext.purge = 
 hgext.convert = 
-crecord = ~/Development/OSS/crecord
 fetch = 
-mercurial_keyring = 
 
 [extdiff]
 cmd.opendiff = fmdiff
