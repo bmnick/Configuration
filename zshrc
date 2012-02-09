@@ -16,7 +16,7 @@ export ZSH_THEME="bmnick"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git rails)
+plugins=(git rails3 git-quick brew bundler gem heroku lein)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -25,9 +25,9 @@ source $ZSH/oh-my-zsh.sh
 #==============================================================================
 
 # make the default editor vim
-export EDITOR="mvim -f --remote-tab-wait"
+export EDITOR="subl -w"
 # special case for git:
-export GIT_EDITOR="mvim -f --remote-tab-wait +1"
+export GIT_EDITOR="subl -w"
 
 function git(){hub "$@"}
 
