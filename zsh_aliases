@@ -43,6 +43,7 @@ if [ -d "/Applications" ]; then
 else
 	alias v='vim'
 fi
+alias rmorig='find . -name \*.orig -exec rm {} \;'
 alias f='find . -name'
 alias mk='make'
 alias mkc='make clean'
@@ -100,3 +101,8 @@ function most_used {
 #----------------------------Directory ALiases--------------------------------#
 export applied="/Users/ben/Dropbox/class/cur/applied/381"
 
+export sp="/Users/ben/Development/Senior Project"
+
+export meteor="/Users/ben/Development/Senior Project/gapclient"
+export meteorite="/Users/ben/Development/Senior Project/androidgapclient"
+export meteoroid="/Users/ben/Development/Senior Project/iosgapwrapper"

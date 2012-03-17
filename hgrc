@@ -10,7 +10,6 @@ pager =
 hgext.purge = 
 hgext.convert = 
 fetch = 
-mercurial_keyring = 
 
 [ui]
 username=Ben Nicholas <ben@ben-nicholas.com>
