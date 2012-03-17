@@ -2,7 +2,6 @@
 hgext.extdiff =
 mq =
 hgext.graphlog = 
-prompt = ~/Development/OSS/hg-prompt/prompt.py
 bookmarks =
 hgext.record =
 color = 
@@ -10,12 +9,8 @@ zeroconf=
 pager =
 hgext.purge = 
 hgext.convert = 
-crecord = ~/Development/OSS/crecord
 fetch = 
 mercurial_keyring = 
-
-[extdiff]
-cmd.opendiff = fmdiff
 
 [ui]
 username=Ben Nicholas <ben@ben-nicholas.com>
@@ -23,27 +18,19 @@ ignore=~/.hgignore
 verbose = true
 
 [alias]
-slog 	= log -l10 --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.slog
-nlog 	= log --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
-sglog 	= glog --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.sglog
-dlog 	= log --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.dlog
-sout 	= outgoing --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.slog
-sin 	= incoming --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.slog
-stip 	= tip --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.slog
-nout 	= outgoing --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
-nin 	= incoming --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
-ntip 	= tip --style=/Users/ben/Development/OSS/mercurial-cli-templates/map-cmdline.nlog
+slog 	= log -l10 --style=/Users/ben/.config/map-cmdline.slog
+nlog 	= log --style=/Users/ben/.config/map-cmdline.nlog
+sglog = glog --style=/Users/ben/.config/map-cmdline.sglog
+dlog 	= log --style=/Users/ben/.config/map-cmdline.dlog
+sout 	= outgoing --style=/Users/ben/.config/map-cmdline.slog
+sin 	= incoming --style=/Users/ben/.config/map-cmdline.slog
+stip 	= tip --style=/Users/ben/.config/map-cmdline.slog
+nout 	= outgoing --style=/Users/ben/.config/map-cmdline.nlog
+nin 	= incoming --style=/Users/ben/.config/map-cmdline.nlog
+ntip 	= tip --style=/Users/ben/.config/map-cmdline.nlog
 
 [diff]
 git = true
-
-[merge-tools]
-# Override stock tool location
-fm.executable = fmmerge
-# Specify command line
-fm.args = $base $other $local $output
-# Give higher priority
-fm.priority = 1
 
 [pager]
 pager = less -FRX
@@ -53,11 +40,6 @@ ignore = version
 track.current = True
 
 [hooks]
-commit.growl 			= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Committed $HG_NODE"
-post-update.growl 		= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Completed Mercurial update"
-changegroup.growl 		= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Completed Mercurial pull/clone"
-post-push.growl 		= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Completed Mercurial push"
-post-rebase.growl 		= /usr/local/bin/growlnotify -a Murky -t "Mercurial" -m "Completed Mercurial rebase"
 post-qrefresh.mqcommit 	= hg addremove --mq && hg commit --mq -m "Snapshot at: `date` with parent revision: `hg identify -r qparent`"
 
 [color]
@@ -83,3 +65,12 @@ diff.trailingwhitespace = bold red_background
 [web]
 allow_push=*
 push_ssl=false
+
+[auth]
+openstache.prefix = openstache.se.rit.edu:8002/
+openstache.username = ben
+openstache.schemes = https
+
+[hostfingerprints]
+openstache.se.rit.edu = 35:82:71:83:6b:6b:7e:35:bd:37:54:ae:bc:ee:58:28:dd:16:18:83
+

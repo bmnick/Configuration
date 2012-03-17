@@ -98,4 +98,5 @@ function most_used {
 
 #-----------------------------------------------------------------------------#
 #----------------------------Directory ALiases--------------------------------#
+export applied="/Users/ben/Dropbox/class/cur/applied/381"
 
