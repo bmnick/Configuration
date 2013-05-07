@@ -25,9 +25,9 @@ source $ZSH/oh-my-zsh.sh
 #==============================================================================
 
 # make the default editor vim
-export EDITOR="subl -w"
+export EDITOR="vim"
 # special case for git:
-export GIT_EDITOR="subl -w"
+export GIT_EDITOR="vim"
 
 function git(){hub "$@"}
 
