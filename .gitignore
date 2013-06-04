@@ -1,4 +1,6 @@
 gitconfig
 zsh-update
+fishd*
+fish_history
 
 ipython/*

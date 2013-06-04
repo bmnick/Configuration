@@ -52,6 +52,9 @@ alias e='exit'
 alias s='sudo'
 alias p='ps aux'
 
+alias plcat='plutil -convert xml1 -o -'
+alias wget='curl -O -L'
+
 #-----------------------------------------------------------------------------#
 #----------------------------Command Combinations-----------------------------#
 function mcd {
