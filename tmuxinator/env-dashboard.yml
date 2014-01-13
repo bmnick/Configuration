@@ -7,7 +7,7 @@ root: ~/Documents/env-dashboard
 # socket_name: foo
 
 # Runs before everything. Use it to start daemons etc.
-pre: sudo service redis start
+#pre: sudo service redis-server start
 
 # Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
 pre_window: rvm use 2.0@env-dashboard
