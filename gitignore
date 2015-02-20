@@ -19,14 +19,23 @@ dist/**.*
 **.mode?v?
 **.perspectivev?
 xcuserdata
-*.xcworkspace
 # for those crazies using svn and hg at the same time
 *.svn*
 
 build
 
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
 # Random OS stuff
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # RVM files
