@@ -249,14 +249,40 @@ values."
   (set (make-local-variable 'compile-command) "buck build messenger-no-watch")
   (recompile)
   )
+(defun buck-run-on-simulator-name (name)
+  (set 'compile-command (concat "buck install --run messenger-no-watch --simulator-name " name))
+  (recompile))
 (defun buck-run-on-simulator ()
   (interactive)
-  (set 'compile-command "buck install --run messenger-no-watch")
-  (recompile))
+  (buck-run-on-simulator-name "iPhone 6"))
 (defun buck-run-on-device ()
   (interactive)
   (set 'compile-command "buck install --run messenger-no-watch#iphoneos-arm64")
   (recompile))
+(defun list-hg-bookmarks ()
+  (split-string (shell-command-to-string
+                 "hg book | awk '{$NF\"\"; pring $0}'")
+                 "\n"))
+
+(defun buck-run-on-simulator-select ()
+  (interactive)
+  (helm :sources (-map (lambda (version)
+                         (helm-build-sync-source (symbol-name (car version))
+                           :candidates (-map (lambda (device) (assoc-default 'name device))
+                                             (cdr version))
+                           :action (lambda (sim-name)
+                                     (buck-run-on-simulator-name (concat "\"" sim-name "\"")))))
+                       (reverse
+                        (-filter (lambda (os)
+                                   (some (lambda (device)
+                                           (string= (assoc-default 'availability
+                                                                   device)
+                                                    "(available)"))
+                                         (cdr os)))
+                                 (assoc-default 'devices
+                                                (json-read-from-string (shell-command-to-string "xcrun simctl list -j devices"))))))
+        :buffer "*helm iOS simulators*")
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -268,7 +294,9 @@ in `dotspacemacs/user-config'."
   (spacemacs/set-leader-keys "cb" 'start-buck-build)
   (spacemacs/set-leader-keys "cd" 'buck-run-on-device)
   (spacemacs/set-leader-keys "cs" 'buck-run-on-simulator)
+  (spacemacs/set-leader-keys "bD" 'server-edit)
   )
+
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -284,9 +312,23 @@ and set the focus back to Emacs frame"
     (setq current-frame (car (car (cdr (current-frame-configuration)))))
     (select-frame-set-input-focus current-frame)
     )
+  (defun helm-hg-bookmarks ()
+    (interactive)
+    (helm :sources (helm-build-sync-source "hg-bookmarks"
+                     :candidates (split-string
+                                  (shell-command-to-string "arc feature")
+                                  "\n")
+                     :action (lambda (elm)
+                               (shell-command (concat "arc feature " (first (delete "*" (split-string elm)))))
+                               ))
+          :buffer "*helm mercurial bookmarks*")
+    )
+  (spacemacs/set-leader-keys "gb" 'helm-hg-bookmarks)
+  (spacemacs/set-leader-keys "cS" 'buck-run-on-simulator-select)
 
   (add-to-list 'compilation-finish-functions
                'notify-compilation-result)
+
   )
 
 (with-eval-after-load 'org
