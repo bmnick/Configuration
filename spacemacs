@@ -250,7 +250,7 @@ values."
   (recompile)
   )
 (defun buck-run-on-simulator-name (name)
-  (set 'compile-command (concat "buck install --run messenger-no-watch --simulator-name " name))
+  (set 'compile-command (concat "buck install --run messenger-no-watch --simulator-name \"" name "\""))
   (recompile))
 (defun buck-run-on-simulator ()
   (interactive)
@@ -314,17 +314,35 @@ and set the focus back to Emacs frame"
     )
   (defun helm-hg-bookmarks ()
     (interactive)
-    (helm :sources (helm-build-sync-source "hg-bookmarks"
-                     :candidates (split-string
-                                  (shell-command-to-string "arc feature")
-                                  "\n")
-                     :action (lambda (elm)
-                               (shell-command (concat "arc feature " (first (delete "*" (split-string elm)))))
-                               ))
+    (defvar helm-source-arc-features
+      (helm-build-sync-source "hg-bookmarks"
+        :candidates (split-string
+                     (shell-command-to-string "arc feature")
+                     "\n")
+        :action (lambda (elm)
+                  (shell-command (concat "arc feature " (first (delete "*" (split-string elm)))))
+                  )))
+    (defvar helm-source-new-arc-feature
+      (helm-build-dummy-source "New feature"
+        :action (lambda (elm)
+                  (shell-command (concat "arc feature " elm))
+                  )))
+    (helm :sources '(helm-source-arc-features
+                     helm-source-new-arc-feature)
           :buffer "*helm mercurial bookmarks*")
     )
   (spacemacs/set-leader-keys "gb" 'helm-hg-bookmarks)
   (spacemacs/set-leader-keys "cS" 'buck-run-on-simulator-select)
+
+  (defun generate-value-files ()
+    (interactive)
+    (projectile-run-shell-command-in-root "fbobjc/Tools/remodel/bin/generateValues Apps/FBMessenger/Libraries/FBWebRTCModule/FBWebRTCModule/"))
+  (defun generate-announcers ()
+    (interactive)
+    (projectile-run-shell-command-in-root "fbobjc/Tools/object-generation/exec/generateAnnouncers"))
+  (spacemacs/declare-prefix "pg" "generate project files")
+  (spacemacs/set-leader-keys "pgv" 'generate-value-files)
+  (spacemacs/set-leader-keys "pga" 'generate-announcers)
 
   (add-to-list 'compilation-finish-functions
                'notify-compilation-result)
