@@ -44,6 +44,7 @@ values."
                       version-control-diff-tool 'diff-hl
                       version-control-global-margin t)
      vim-empty-lines
+     monky
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -211,7 +212,7 @@ values."
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen. (default t)
-   dotspacemacs-smooth-scrolling t
+   dotspacemacs-smooth-scrolling nil
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
@@ -271,7 +272,7 @@ values."
                            :candidates (-map (lambda (device) (assoc-default 'name device))
                                              (cdr version))
                            :action (lambda (sim-name)
-                                     (buck-run-on-simulator-name (concat "\"" sim-name "\"")))))
+                                     (buck-run-on-simulator-name sim-name))))
                        (reverse
                         (-filter (lambda (os)
                                    (some (lambda (device)
@@ -312,13 +313,26 @@ and set the focus back to Emacs frame"
     (setq current-frame (car (car (cdr (current-frame-configuration)))))
     (select-frame-set-input-focus current-frame)
     )
+
+  ;; Make objective-C headers load in objc-mode
+  (add-to-list 'magic-mode-alist
+               `(,(lambda ()
+                    (and (string= (file-name-extension buffer-file-name) "h")
+                         (re-search-forward "@\\<interface\\>" 
+                                            magic-mode-regexp-match-limit t)))
+                 . objc-mode))
+
+  ;; Allow switching to .mm files when available
+  (require 'find-file)
+  (nconc (cadr (assoc "\\.h\\'" cc-other-file-alist)) '(".m" ".mm"))
+  (nconc (cadr (assoc "\\.mm\\'" cc-other-file-alist)) '(".h"))
+
   (defun helm-hg-bookmarks ()
     (interactive)
     (defvar helm-source-arc-features
-      (helm-build-sync-source "hg-bookmarks"
-        :candidates (split-string
-                     (shell-command-to-string "arc feature")
-                     "\n")
+      (helm-build-in-file-source "Mercurial bookmarks" "/Users/bmnic/fbsource/.hg/bookmarks"
+        :filter-one-by-one (lambda (bookmark)
+                                  (last (split-string bookmark)))
         :action (lambda (elm)
                   (shell-command (concat "arc feature " (first (delete "*" (split-string elm)))))
                   )))
@@ -328,7 +342,7 @@ and set the focus back to Emacs frame"
                   (shell-command (concat "arc feature " elm))
                   )))
     (helm :sources '(helm-source-arc-features
-                     helm-source-new-arc-feature)
+                      helm-source-new-arc-feature)
           :buffer "*helm mercurial bookmarks*")
     )
   (spacemacs/set-leader-keys "gb" 'helm-hg-bookmarks)
@@ -336,13 +350,24 @@ and set the focus back to Emacs frame"
 
   (defun generate-value-files ()
     (interactive)
-    (projectile-run-shell-command-in-root "fbobjc/Tools/remodel/bin/generateValues Apps/FBMessenger/Libraries/FBWebRTCModule/FBWebRTCModule/"))
+    (projectile-with-default-dir (projectile-project-root)
+      (shell-command "fbobjc/Tools/remodel/bin/generate fbobjc/Libraries/FBWebRTCKit/FBWebRTCKit/")))
   (defun generate-announcers ()
     (interactive)
-    (projectile-run-shell-command-in-root "fbobjc/Tools/object-generation/exec/generateAnnouncers"))
+    (projectile-with-default-dir (projectile-project-root)
+      (shell-command "fbobjc/Tools/object-generation/exec/generateAnnouncers")))
+  (defun generate-mobile-config ()
+    (interactive)
+    (projectile-with-default-dir (projectile-project-root)
+      (shell-command  "fbobjc/Libraries/FBMobileConfig/Tools/download_definition.sh -c webrtc_config")))
+  (defun generate-xcode-project-and-open ()
+    (interactive)
+    (start-process-shell-command "buck project" nil "buck project messenger-no-watch && open ~/fbsource/fbobjc/Apps/FBMessenger/MessengerWithoutWatch.xcworkspace"))
   (spacemacs/declare-prefix "pg" "generate project files")
   (spacemacs/set-leader-keys "pgv" 'generate-value-files)
   (spacemacs/set-leader-keys "pga" 'generate-announcers)
+  (spacemacs/set-leader-keys "pgc" 'generate-mobile-config)
+  (spacemacs/set-leader-keys "pgx" 'generate-xcode-project-and-open)
 
   (add-to-list 'compilation-finish-functions
                'notify-compilation-result)
@@ -350,7 +375,14 @@ and set the focus back to Emacs frame"
   )
 
 (with-eval-after-load 'org
-                       (setq org-agenda-files (list "~/org/notes.org")))
+  (setq org-agenda-files (list
+                          "~/org/notes.org"
+                          "~/emacs.org"))
+  (setq org-refile-targets
+        '((nil :maxlevel . 3)
+          (org-agenda-files :maxlevel . 2)))
+  (setq org-todo-keywords '((sequence "TASK" "NEXT" "INPROGRESS" "OUTBOX" "|" "LANDED" "PICK REQUESTED" "PICKED" "HANDEDOFF")
+                            (sequence "TODO" "WORKING" "DONE"))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
