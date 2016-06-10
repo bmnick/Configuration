@@ -45,6 +45,10 @@ values."
                       version-control-global-margin t)
      vim-empty-lines
      monky
+     hackernews
+     beacon
+     erc
+     secure-config
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -308,7 +312,6 @@ layers configuration. You are free to put any user code."
 close the *compilation* buffer if the compilation is successful,
 and set the focus back to Emacs frame"
     (if (string-match "^finished" msg)
-      (delete-windows-on buffer)
       (tooltip-show "\n Compilation Failed :-( \n "))
     (setq current-frame (car (car (cdr (current-frame-configuration)))))
     (select-frame-set-input-focus current-frame)
@@ -318,7 +321,7 @@ and set the focus back to Emacs frame"
   (add-to-list 'magic-mode-alist
                `(,(lambda ()
                     (and (string= (file-name-extension buffer-file-name) "h")
-                         (re-search-forward "@\\<interface\\>" 
+                         (re-search-forward "@\\<interface\\>"
                                             magic-mode-regexp-match-limit t)))
                  . objc-mode))
 
@@ -369,6 +372,22 @@ and set the focus back to Emacs frame"
   (spacemacs/set-leader-keys "pgc" 'generate-mobile-config)
   (spacemacs/set-leader-keys "pgx" 'generate-xcode-project-and-open)
 
+  (defun go-to-emacs-org-file ()
+    (interactive)
+    (find-file-existing "~/org/emacs.org"))
+  (defun go-to-main-org-file ()
+    (interactive)
+    (find-file-existing "~/org/notes.org"))
+  (spacemacs/declare-prefix "fO" "org files")
+  (spacemacs/set-leader-keys "fOe" 'go-to-emacs-org-file)
+  (spacemacs/set-leader-keys "fOn" 'go-to-main-org-file)
+
+  (defun erc-facebook-connect ()
+    (interactive)
+    (erc-tls :server "irc.tfbnw.net" :port 6443
+             :nick "bmnic" :full-name "Ben Nicholas" :password user-fb-irc-password))
+  (spacemacs/set-leader-keys "aif" 'erc-facebook-connect)
+
   (add-to-list 'compilation-finish-functions
                'notify-compilation-result)
 
@@ -377,7 +396,9 @@ and set the focus back to Emacs frame"
 (with-eval-after-load 'org
   (setq org-agenda-files (list
                           "~/org/notes.org"
-                          "~/emacs.org"))
+                          "~/org/emacs.org"))
+
+
   (setq org-refile-targets
         '((nil :maxlevel . 3)
           (org-agenda-files :maxlevel . 2)))
@@ -386,3 +407,18 @@ and set the focus back to Emacs frame"
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(erc-prompt (lambda nil (concat "[" (buffer-name) "]")))
+ '(erc-prompt-for-nickserv-password nil)
+ '(erc-services-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
