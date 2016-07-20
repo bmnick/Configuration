@@ -32,7 +32,7 @@ values."
      org
      osx
      (shell :variables
-            shell-default-shell 'ansi-term
+            shell-default-shell 'eshell
             shell-default-height 20
             shell-default-position 'bottom)
      ;; spell-checking
@@ -378,9 +378,21 @@ and set the focus back to Emacs frame"
   (defun go-to-main-org-file ()
     (interactive)
     (find-file-existing "~/org/notes.org"))
+  (defun go-to-impact-org-file ()
+    (interactive)
+    (find-file-existing "~/org/impact.org"))
+  (defun go-to-hackday-org-file ()
+    (interactive)
+    (find-file-existing "~/org/hackday.org"))
+  (defun go-to-hackathon-org-file ()
+    (interactive)
+    (find-file-existing "~/org/hackathon.org"))
   (spacemacs/declare-prefix "fO" "org files")
   (spacemacs/set-leader-keys "fOe" 'go-to-emacs-org-file)
   (spacemacs/set-leader-keys "fOn" 'go-to-main-org-file)
+  (spacemacs/set-leader-keys "fOi" 'go-to-impact-org-file)
+  (spacemacs/set-leader-keys "fOh" 'go-to-hackday-org-file)
+  (spacemacs/set-leader-keys "fOH" 'go-to-hackathon-org-file)
 
   (defun erc-facebook-connect ()
     (interactive)
@@ -396,8 +408,21 @@ and set the focus back to Emacs frame"
 (with-eval-after-load 'org
   (setq org-agenda-files (list
                           "~/org/notes.org"
-                          "~/org/emacs.org"))
+                          "~/org/emacs.org"
+                          "~/org/impact.org"
+                          "~/org/hackathon.org"))
 
+  (defun org-task-open (path)
+    "Open a FB task on intern."
+    (browse-url (concat "https://our.intern.facebook.com/intern/tasks/?t=" path)))
+
+  (org-add-link-type "t" 'org-task-open)
+
+  (defun org-diff-open (path)
+    "Open a FB diff on intern."
+    (browse-url (concat "https://phabricator.intern.facebook.com/D" path)))
+
+  (org-add-link-type "D" 'org-diff-open)
 
   (setq org-refile-targets
         '((nil :maxlevel . 3)
