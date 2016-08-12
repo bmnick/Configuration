@@ -383,7 +383,8 @@ and set the focus back to Emacs frame"
   (defun go-to-org-file (filename)
     (find-file-existing (concat (file-name-as-directory org-file-base) filename)))
   (defun go-to-arbitrary-org-file (file)
-    (interactive "sWhich file?(no .org):")
+    (interactive (list
+                  (read-file-name "org file:" (file-name-as-directory org-file-base))))
     (find-file-existing (concat (file-name-as-directory org-file-base) (concat file ".org"))))
   (spacemacs/declare-prefix "fO" "org files")
   (spacemacs/set-leader-keys "fOe" (lambda () (interactive) (go-to-org-file "emacs.org")))
