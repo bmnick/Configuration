@@ -32,7 +32,7 @@ values."
      org
      osx
      (shell :variables
-            shell-default-shell 'ansi-term
+            shell-default-shell 'eshell
             shell-default-height 20
             shell-default-position 'bottom)
      ;; spell-checking
@@ -44,8 +44,7 @@ values."
                       version-control-diff-tool 'diff-hl
                       version-control-global-margin t)
      vim-empty-lines
-     monky
-     hackernews
+     ;;monky
      beacon
      erc
      secure-config
