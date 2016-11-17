@@ -299,6 +299,10 @@ in `dotspacemacs/user-config'."
   (spacemacs/set-leader-keys "cd" 'buck-run-on-device)
   (spacemacs/set-leader-keys "cs" 'buck-run-on-simulator)
   (spacemacs/set-leader-keys "bD" 'server-edit)
+  (add-hook 'java-mode-hook (lambda ()
+                              (setq c-basic-offset 2
+                                    tab-width 2
+                                    indent-tabs-mode nil)))
   )
 
 
