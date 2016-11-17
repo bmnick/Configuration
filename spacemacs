@@ -364,22 +364,37 @@ and set the focus back to Emacs frame"
       (shell-command  "fbobjc/Libraries/FBMobileConfig/Tools/download_definition.sh -c webrtc_config")))
   (defun generate-xcode-project-and-open ()
     (interactive)
-    (start-process-shell-command "buck project" nil "buck project messenger-no-watch && open ~/fbsource/fbobjc/Apps/FBMessenger/MessengerWithoutWatch.xcworkspace"))
+    (start-process-shell-command "buck project" "*project generation*" "buck project messenger-no-watch && open ~/fbsource/fbobjc/Apps/FBMessenger/MessengerWithoutWatch.xcworkspace"))
+  (defun generate-focused-xcode-project-and-open ()
+    (interactive)
+    (start-process-shell-command "arc focus" "*project generation*" "arc focus bn_rtc"))
+  (defun generate-focused-xcode-project-for-device-and-open ()
+    (interactive)
+    (start-process-shell-command "arc focus" "*project generation*" "arc focus bn_rtc --arch arm64"))
   (spacemacs/declare-prefix "pg" "generate project files")
   (spacemacs/set-leader-keys "pgv" 'generate-value-files)
   (spacemacs/set-leader-keys "pga" 'generate-announcers)
   (spacemacs/set-leader-keys "pgc" 'generate-mobile-config)
   (spacemacs/set-leader-keys "pgx" 'generate-xcode-project-and-open)
+  (spacemacs/set-leader-keys "pgf" 'generate-focused-xcode-project-and-open)
+  (spacemacs/set-leader-keys "pgF" 'generate-focused-xcode-project-for-device-and-open)
 
-  (defun go-to-emacs-org-file ()
-    (interactive)
-    (find-file-existing "~/org/emacs.org"))
-  (defun go-to-main-org-file ()
-    (interactive)
-    (find-file-existing "~/org/notes.org"))
+
+  (defconst org-file-base "~/Library/Mobile Documents/com~apple~CloudDocs/org")
+  (defun go-to-org-file (filename)
+    (find-file-existing (concat (file-name-as-directory org-file-base) filename)))
+  (defun go-to-arbitrary-org-file (file)
+    (interactive (list
+                  (read-file-name "org file:" (file-name-as-directory org-file-base))))
+    (find-file-existing (concat (file-name-as-directory org-file-base) (concat file ".org"))))
   (spacemacs/declare-prefix "fO" "org files")
-  (spacemacs/set-leader-keys "fOe" 'go-to-emacs-org-file)
-  (spacemacs/set-leader-keys "fOn" 'go-to-main-org-file)
+  (spacemacs/set-leader-keys "fOe" (lambda () (interactive) (go-to-org-file "emacs.org")))
+  (spacemacs/set-leader-keys "fOn" (lambda () (interactive) (go-to-org-file "notes.org")))
+  (spacemacs/set-leader-keys "fOi" (lambda () (interactive) (go-to-org-file "impact.org")))
+  (spacemacs/set-leader-keys "fOh" (lambda () (interactive) (go-to-org-file "hackday.org")))
+  (spacemacs/set-leader-keys "fOH" (lambda () (interactive) (go-to-org-file "hackathon.org")))
+  (spacemacs/set-leader-keys "fOs" (lambda () (interactive) (go-to-org-file "sideprojects.org")))
+  (spacemacs/set-leader-keys "fOa" 'go-to-arbitrary-org-file)
 
   (defun erc-facebook-connect ()
     (interactive)
@@ -395,8 +410,21 @@ and set the focus back to Emacs frame"
 (with-eval-after-load 'org
   (setq org-agenda-files (list
                           "~/org/notes.org"
-                          "~/org/emacs.org"))
+                          "~/org/emacs.org"
+                          "~/org/impact.org"
+                          "~/org/hackathon.org"))
 
+  (defun org-task-open (path)
+    "Open a FB task on intern."
+    (browse-url (concat "https://our.intern.facebook.com/intern/tasks/?t=" path)))
+
+  (org-add-link-type "t" 'org-task-open)
+
+  (defun org-diff-open (path)
+    "Open a FB diff on intern."
+    (browse-url (concat "https://phabricator.intern.facebook.com/D" path)))
+
+  (org-add-link-type "D" 'org-diff-open)
 
   (setq org-refile-targets
         '((nil :maxlevel . 3)
