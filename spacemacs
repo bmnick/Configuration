@@ -47,7 +47,7 @@ values."
      ;;monky
      beacon
      erc
-     secure-config
+     ;; secure-config
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -124,6 +124,8 @@ values."
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
+   ;; stop prompting for additional languages
+   dotspacemacs-enable-lazy-installation nil
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -293,7 +295,16 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
-  (add-to-list 'auto-mode-alist '("\\.mm\\'" . objc-mode))
+
+  (defun spacemacs/objective-c-file-p ()
+    (and buffer-file-name
+         (string= (file-name-extension buffer-file-name) "m")
+         (string= (file-name-extension buffer-file-name) "mm")
+         (re-search-forward "@interface" 
+                            magic-mode-regexp-match-limit t)))
+
+  (add-to-list 'magic-mode-alist
+               (cons #'spacemacs/objective-c-file-p #'objc-mode))
   (spacemacs/set-leader-keys "fa" 'ff-find-other-file)
   (spacemacs/set-leader-keys "cb" 'start-buck-build)
   (spacemacs/set-leader-keys "cd" 'buck-run-on-device)
@@ -303,6 +314,7 @@ in `dotspacemacs/user-config'."
                               (setq c-basic-offset 2
                                     tab-width 2
                                     indent-tabs-mode nil)))
+
   )
 
 
@@ -319,14 +331,6 @@ and set the focus back to Emacs frame"
     (setq current-frame (car (car (cdr (current-frame-configuration)))))
     (select-frame-set-input-focus current-frame)
     )
-
-  ;; Make objective-C headers load in objc-mode
-  (add-to-list 'magic-mode-alist
-               `(,(lambda ()
-                    (and (string= (file-name-extension buffer-file-name) "h")
-                         (re-search-forward "@\\<interface\\>"
-                                            magic-mode-regexp-match-limit t)))
-                 . objc-mode))
 
   ;; Allow switching to .mm files when available
   (require 'find-file)
@@ -354,6 +358,25 @@ and set the focus back to Emacs frame"
   (spacemacs/set-leader-keys "gb" 'helm-hg-bookmarks)
   (spacemacs/set-leader-keys "cS" 'buck-run-on-simulator-select)
 
+  ;; Set up quick jumps to commonly used org files
+  (defconst org-file-base "~/Library/Mobile Documents/com~apple~CloudDocs/org")
+  (defun go-to-org-file (filename)
+    (find-file-existing (concat (file-name-as-directory org-file-base) filename)))
+  (defun go-to-arbitrary-org-file (file)
+    (interactive (list
+                  (read-file-name "org file:" (file-name-as-directory org-file-base))))
+    (find-file-existing (concat (file-name-as-directory org-file-base) (concat file ".org"))))
+  (spacemacs/declare-prefix "fO" "org files")
+  (spacemacs/set-leader-keys "fOe" (lambda () (interactive) (go-to-org-file "emacs.org")))
+  (spacemacs/set-leader-keys "fOn" (lambda () (interactive) (go-to-org-file "inbox.org")))
+  (spacemacs/set-leader-keys "fOi" (lambda () (interactive) (go-to-org-file "impact.org")))
+  (spacemacs/set-leader-keys "fOh" (lambda () (interactive) (go-to-org-file "hackday.org")))
+  (spacemacs/set-leader-keys "fOH" (lambda () (interactive) (go-to-org-file "hackathon.org")))
+  (spacemacs/set-leader-keys "fOs" (lambda () (interactive) (go-to-org-file "sideprojects.org")))
+  (spacemacs/set-leader-keys "fOf" (lambda () (interactive) (go-to-org-file "facebook.org")))
+  (spacemacs/set-leader-keys "fOm" (lambda () (interactive) (go-to-org-file "media.org")))
+  (spacemacs/set-leader-keys "fOa" 'go-to-arbitrary-org-file)
+
   (defun generate-value-files ()
     (interactive)
     (projectile-with-default-dir (projectile-project-root)
@@ -375,30 +398,14 @@ and set the focus back to Emacs frame"
   (defun generate-focused-xcode-project-for-device-and-open ()
     (interactive)
     (start-process-shell-command "arc focus" "*project generation*" "arc focus bn_rtc --arch arm64"))
-  (spacemacs/declare-prefix "pg" "generate project files")
-  (spacemacs/set-leader-keys "pgv" 'generate-value-files)
-  (spacemacs/set-leader-keys "pga" 'generate-announcers)
-  (spacemacs/set-leader-keys "pgc" 'generate-mobile-config)
-  (spacemacs/set-leader-keys "pgx" 'generate-xcode-project-and-open)
-  (spacemacs/set-leader-keys "pgf" 'generate-focused-xcode-project-and-open)
-  (spacemacs/set-leader-keys "pgF" 'generate-focused-xcode-project-for-device-and-open)
+  (spacemacs/declare-prefix "og" "generate project files")
+  (spacemacs/set-leader-keys "ogv" 'generate-value-files)
+  (spacemacs/set-leader-keys "oga" 'generate-announcers)
+  (spacemacs/set-leader-keys "ogc" 'generate-mobile-config)
+  (spacemacs/set-leader-keys "ogx" 'generate-xcode-project-and-open)
+  (spacemacs/set-leader-keys "ogf" 'generate-focused-xcode-project-and-open)
+  (spacemacs/set-leader-keys "ogF" 'generate-focused-xcode-project-for-device-and-open)
 
-
-  (defconst org-file-base "~/Library/Mobile Documents/com~apple~CloudDocs/org")
-  (defun go-to-org-file (filename)
-    (find-file-existing (concat (file-name-as-directory org-file-base) filename)))
-  (defun go-to-arbitrary-org-file (file)
-    (interactive (list
-                  (read-file-name "org file:" (file-name-as-directory org-file-base))))
-    (find-file-existing (concat (file-name-as-directory org-file-base) (concat file ".org"))))
-  (spacemacs/declare-prefix "fO" "org files")
-  (spacemacs/set-leader-keys "fOe" (lambda () (interactive) (go-to-org-file "emacs.org")))
-  (spacemacs/set-leader-keys "fOn" (lambda () (interactive) (go-to-org-file "notes.org")))
-  (spacemacs/set-leader-keys "fOi" (lambda () (interactive) (go-to-org-file "impact.org")))
-  (spacemacs/set-leader-keys "fOh" (lambda () (interactive) (go-to-org-file "hackday.org")))
-  (spacemacs/set-leader-keys "fOH" (lambda () (interactive) (go-to-org-file "hackathon.org")))
-  (spacemacs/set-leader-keys "fOs" (lambda () (interactive) (go-to-org-file "sideprojects.org")))
-  (spacemacs/set-leader-keys "fOa" 'go-to-arbitrary-org-file)
 
   (defun erc-facebook-connect ()
     (interactive)
@@ -412,11 +419,9 @@ and set the focus back to Emacs frame"
   )
 
 (with-eval-after-load 'org
-  (setq org-agenda-files (list
-                          "~/org/notes.org"
-                          "~/org/emacs.org"
-                          "~/org/impact.org"
-                          "~/org/hackathon.org"))
+  (setq org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/org")
+  (setq org-default-notes-file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
+  (setq org-agenda-files (quote ("~/Library/Mobile Documents/com~apple~CloudDocs/org")))
 
   (defun org-task-open (path)
     "Open a FB task on intern."
@@ -433,6 +438,17 @@ and set the focus back to Emacs frame"
   (setq org-refile-targets
         '((nil :maxlevel . 3)
           (org-agenda-files :maxlevel . 2)))
+
+  (setq org-capture-templates
+      (quote (("t" "todo" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/inbox.org")
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("w" "org-protocol" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/inbox.org")
+               "* TODO Review %c\n%U\n" :immediate-finish t)
+              ("m" "Meeting" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/inbox.org")
+               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+              ("d" "Desk Chat" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/inbox.org")
+               "* Desk Chat with %? :PHONE:\n%U" :clock-in t :clock-resume t))))
+
   (setq org-todo-keywords '((sequence "TASK" "NEXT" "INPROGRESS" "OUTBOX" "|" "LANDED" "PICK REQUESTED" "PICKED" "HANDEDOFF")
                             (sequence "TODO" "WORKING" "DONE"))))
 
@@ -445,7 +461,8 @@ and set the focus back to Emacs frame"
  ;; If there is more than one, they won't work right.
  '(erc-prompt (lambda nil (concat "[" (buffer-name) "]")))
  '(erc-prompt-for-nickserv-password nil)
- '(erc-services-mode nil))
+ '(erc-services-mode nil)
+ '(org-startup-indented t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

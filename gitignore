@@ -49,3 +49,5 @@ doc/tags-*
 syntax: regexp
 .*/te?mp/.*
 
+recentf
+srecode-map.el
