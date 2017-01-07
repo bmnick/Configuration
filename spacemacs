@@ -406,7 +406,6 @@ and set the focus back to Emacs frame"
   (spacemacs/set-leader-keys "ogf" 'generate-focused-xcode-project-and-open)
   (spacemacs/set-leader-keys "ogF" 'generate-focused-xcode-project-for-device-and-open)
 
-
   (defun erc-facebook-connect ()
     (interactive)
     (erc-tls :server "irc.tfbnw.net" :port 6443
