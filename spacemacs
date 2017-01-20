@@ -48,6 +48,7 @@ values."
      beacon
      erc
      ;; secure-config
+     gnus
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -337,6 +338,36 @@ and set the focus back to Emacs frame"
   (nconc (cadr (assoc "\\.h\\'" cc-other-file-alist)) '(".m" ".mm"))
   (nconc (cadr (assoc "\\.mm\\'" cc-other-file-alist)) '(".h"))
 
+  ;; Configure gnus for iCloud email
+  ;; Get email, and store in nnml
+  (setq gnus-secondary-select-methods
+        '(
+          (nnimap "iCloud"
+                  (nnimap-address
+                   "imap.mail.me.com")
+                  (nnimap-server-port 993)
+                  (nnimap-stream ssl))
+          ))
+
+  ;; Send email via Gmail:
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-default-smtp-server "smtp.mail.me.com")
+
+  ;; Archive outgoing email in Sent folder on imap.gmail.com:
+  (setq gnus-message-archive-method '(nnimap "imap.mail.me.com")
+        gnus-message-archive-group "Sent")
+
+  ;; set return email address based on incoming email address
+  (setq gnus-posting-styles
+        '(((header "to" "bmnic@me.com")
+           (address "bmnic@me.com"))
+          ((header "to" "bmnic@icloud.com")
+           (address "bmnic@icloud.com"))))
+
+  ;; store email in ~/gmail directory
+  (setq nnml-directory "~/icloudmail")
+  (setq message-directory "~/icloudmail")
+
   (defun helm-hg-bookmarks ()
     (interactive)
     (defvar helm-source-arc-features
@@ -434,22 +465,36 @@ and set the focus back to Emacs frame"
 
   (org-add-link-type "D" 'org-diff-open)
 
+  (defun org-gk-open (path)
+    "Open a GK on intern"
+    (browse-url (concat "https://our.intern.facebook.com/intern/gatekeeper/projects/" path "/")))
+
+  (org-add-link-type "gk" 'org-gk-open)
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "." 'spacemacs/org-agenda-transient-state/body)
+
   (setq org-refile-targets
         '((nil :maxlevel . 3)
           (org-agenda-files :maxlevel . 2)))
 
   (setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/inbox.org")
+      (quote (("t" "todo" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("w" "org-protocol" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/inbox.org")
+              ("k" "task" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
+               "* TASK %?\n:PROPERTIES:\n:TASK: t:%^{Task number?}\n:END:\n%U" :clock-in t :clock-resume t)
+              ("w" "org-protocol" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
                "* TODO Review %c\n%U\n" :immediate-finish t)
-              ("m" "Meeting" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/inbox.org")
+              ("m" "Meeting" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-              ("d" "Desk Chat" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/inbox.org")
-               "* Desk Chat with %? :PHONE:\n%U" :clock-in t :clock-resume t))))
+              ("i" "interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
+               "* INTERVIEW for %? :INTERVIEW:\n%U" :clock-in t :clock-resume t)
+              ("d" "Desk Chat" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
+               "* CHAT Desk Chat with %? :PHONE:\n%U" :clock-in t :clock-resume t))))
 
   (setq org-todo-keywords '((sequence "TASK" "NEXT" "INPROGRESS" "OUTBOX" "|" "LANDED" "PICK REQUESTED" "PICKED" "HANDEDOFF")
-                            (sequence "TODO" "WORKING" "DONE"))))
+                            (sequence "TODO" "WORKING" "DONE")
+                            (sequence "WAITING" "|" "CANCELED" "MEETING" "INTERVIEW" "CHAT")
+                            (sequence "EXPERIMENT" "DATACOLLECTION" "ANALYSIS" "|" "DECIDED"))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
