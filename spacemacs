@@ -256,6 +256,12 @@ values."
   (set (make-local-variable 'compile-command) "buck build messenger-no-watch")
   (recompile)
   )
+(defun start-buck-build ()
+  "helm-gtags-dwim in the other window"
+  (interactive)
+  (set (make-local-variable 'compile-command) "buck test //Apps/FBMessenger/Libraries/FBWebRTCModule:FBWebRTCModuleTest")
+  (recompile)
+  )
 (defun buck-run-on-simulator-name (name)
   (set 'compile-command (concat "buck install --run messenger-no-watch --simulator-name \"" name "\""))
   (recompile))
@@ -297,18 +303,10 @@ It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
 
-  (defun spacemacs/objective-c-file-p ()
-    (and buffer-file-name
-         (string= (file-name-extension buffer-file-name) "m")
-         (string= (file-name-extension buffer-file-name) "mm")
-         (re-search-forward "@interface" 
-                            magic-mode-regexp-match-limit t)))
-
-  (add-to-list 'magic-mode-alist
-               (cons #'spacemacs/objective-c-file-p #'objc-mode))
   (spacemacs/set-leader-keys "fa" 'ff-find-other-file)
   (spacemacs/set-leader-keys "cb" 'start-buck-build)
-  (spacemacs/set-leader-keys "cd" 'buck-run-on-device)
+  (spacemacs/set-leader-keys "cv" 'start-buck-test)
+  (spacemacs/set-leader-keys "ce" 'buck-run-on-device)
   (spacemacs/set-leader-keys "cs" 'buck-run-on-simulator)
   (spacemacs/set-leader-keys "bD" 'server-edit)
   (add-hook 'java-mode-hook (lambda ()
@@ -332,6 +330,18 @@ and set the focus back to Emacs frame"
     (setq current-frame (car (car (cdr (current-frame-configuration)))))
     (select-frame-set-input-focus current-frame)
     )
+
+  ;; Header files matching @interface should be treated as objc files
+  (defun spacemacs/objective-c-file-p ()
+    (and buffer-file-name
+         (string= (file-name-extension buffer-file-name) "h")
+         (re-search-forward "@interface"
+                            magic-mode-regexp-match-limit t)))
+  (add-to-list 'magic-mode-alist
+               (cons #'spacemacs/objective-c-file-p #'objc-mode))
+
+  ;; Override any silly nroff crap, .mm = objc-mode
+  (add-to-list 'auto-mode-alist '("\\.mm\\'" . objc-mode))
 
   ;; Allow switching to .mm files when available
   (require 'find-file)
@@ -486,10 +496,12 @@ and set the focus back to Emacs frame"
                "* TODO Review %c\n%U\n" :immediate-finish t)
               ("m" "Meeting" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-              ("i" "interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
-               "* INTERVIEW for %? :INTERVIEW:\n%U" :clock-in t :clock-resume t)
+              ("s" "Screen Interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/impact.org")
+               "* INTERVIEW for %?\n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Onsite Screen\n%U" :clock-in t :clock-resume t)
+              ("n" "Ninja Interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/impact.org")
+               "* INTERVIEW for %? \n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Ninja\n%U" :clock-in t :clock-resume t)
               ("d" "Desk Chat" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
-               "* CHAT Desk Chat with %? :PHONE:\n%U" :clock-in t :clock-resume t))))
+               "* CHAT Desk Chat with %? :DESKCHAT:\n%U" :clock-in t :clock-resume t))))
 
   (setq org-todo-keywords '((sequence "TASK" "NEXT" "INPROGRESS" "OUTBOX" "|" "LANDED" "PICK REQUESTED" "PICKED" "HANDEDOFF")
                             (sequence "TODO" "WORKING" "DONE")
