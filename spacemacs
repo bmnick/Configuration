@@ -497,9 +497,11 @@ and set the focus back to Emacs frame"
               ("m" "Meeting" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
               ("s" "Screen Interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/impact.org")
-               "* INTERVIEW for %?\n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Onsite Screen\n%U" :clock-in t :clock-resume t)
+               "* INTERVIEW for %?\n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Onsite Screen\n:END:\n%U" :clock-in t :clock-resume t)
               ("n" "Ninja Interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/impact.org")
-               "* INTERVIEW for %? \n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Ninja\n%U" :clock-in t :clock-resume t)
+               "* INTERVIEW for %? \n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Ninja\n:END:\n%U" :clock-in t :clock-resume t)
+              ("r" "Reverse Shadow Ninja Interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/impact.org")
+               "* INTERVIEW for %? by %? \n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Ninja Reverse Shadow\n:END:\n%U" :clock-in t :clock-resume t)
               ("d" "Desk Chat" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
                "* CHAT Desk Chat with %? :DESKCHAT:\n%U" :clock-in t :clock-resume t))))
 
