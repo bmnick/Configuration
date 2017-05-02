@@ -54,7 +54,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(org-habit)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -109,13 +109,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
-                         solarized-light
-                         solarized-dark
-                         leuven
-                         monokai
-                         zenburn)
+   dotspacemacs-themes '(spacemacs-light
+                         spacemacs-dark)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -304,6 +299,7 @@ any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
 
   (spacemacs/set-leader-keys "fa" 'ff-find-other-file)
+  (spacemacs/set-leader-keys "f!" 'recover-this-file)
   (spacemacs/set-leader-keys "cb" 'start-buck-build)
   (spacemacs/set-leader-keys "cv" 'start-buck-test)
   (spacemacs/set-leader-keys "ce" 'buck-run-on-device)
@@ -321,6 +317,8 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  (add-to-list 'org-modules 'org-habit)
+
   (defun notify-compilation-result(buffer msg)
     "Notify that the compilation is finished,
 close the *compilation* buffer if the compilation is successful,
@@ -447,6 +445,8 @@ and set the focus back to Emacs frame"
   (spacemacs/set-leader-keys "ogf" 'generate-focused-xcode-project-and-open)
   (spacemacs/set-leader-keys "ogF" 'generate-focused-xcode-project-for-device-and-open)
 
+  (spacemacs/set-leader-keys "f!" 'recover-this-file)
+
   (defun erc-facebook-connect ()
     (interactive)
     (erc-tls :server "irc.tfbnw.net" :port 6443
@@ -502,6 +502,8 @@ and set the focus back to Emacs frame"
                "* INTERVIEW for %? \n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Ninja\n:END:\n%U" :clock-in t :clock-resume t)
               ("r" "Reverse Shadow Ninja Interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/impact.org")
                "* INTERVIEW for %? by %? \n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Ninja Reverse Shadow\n:END:\n%U" :clock-in t :clock-resume t)
+              ("p" "Pirate Interview" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/impact.org")
+               "* INTERVIEW for %? \n:PROPERTIES:\n:DECISION:\n:CONFIDENCE:\n:TYPE: Pirate\n:END:\n%U" :clock-in t :clock-resume t)
               ("d" "Desk Chat" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
                "* CHAT Desk Chat with %? :DESKCHAT:\n%U" :clock-in t :clock-resume t))))
 
