@@ -27,6 +27,7 @@ values."
                        auto-completion-enable-help-tooltip t)
      ;s better-defaults
      emacs-lisp
+     ivy
      ;; git
      ;; markdown
      org
@@ -54,7 +55,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(org-habit)
+   dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -310,6 +311,11 @@ in `dotspacemacs/user-config'."
                                     tab-width 2
                                     indent-tabs-mode nil)))
 
+  (set-default-coding-systems 'utf-8)
+
+  (require 'epa-file)
+  (epa-file-enable)
+  (setf epa-pinentry-mode 'loopback)
   )
 
 
@@ -317,7 +323,6 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  (add-to-list 'org-modules 'org-habit)
 
   (defun notify-compilation-result(buffer msg)
     "Notify that the compilation is finished,
@@ -461,7 +466,11 @@ and set the focus back to Emacs frame"
 (with-eval-after-load 'org
   (setq org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/org")
   (setq org-default-notes-file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
-  (setq org-agenda-files (quote ("~/Library/Mobile Documents/com~apple~CloudDocs/org")))
+  (setq org-agenda-files (if (>=
+                              (length (epg-list-keys (epg-make-context epa-protocol) "bmnic@fb.com" t))
+                              1)
+                             (quote ("~/Library/Mobile Documents/com~apple~CloudDocs/org/facebook.org.gpg" "~/Library/Mobile Documents/com~apple~CloudDocs/org"))
+                           (quote ("~/Library/Mobile Documents/com~apple~CloudDocs/org"))))
 
   (defun org-task-open (path)
     "Open a FB task on intern."
@@ -487,6 +496,7 @@ and set the focus back to Emacs frame"
         '((nil :maxlevel . 3)
           (org-agenda-files :maxlevel . 2)))
 
+  (add-to-list 'org-modules 'org-habit)
   (setq org-capture-templates
       (quote (("t" "todo" entry (file "~/Library/Mobile Documents/com~apple~CloudDocs/org/inbox.org")
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
@@ -519,14 +529,12 @@ and set the focus back to Emacs frame"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(erc-prompt (lambda nil (concat "[" (buffer-name) "]")))
- '(erc-prompt-for-nickserv-password nil)
- '(erc-services-mode nil)
- '(org-startup-indented t))
+ '(package-selected-packages
+   (quote
+    (wgrep smex ivy-hydra counsel-projectile counsel swiper ivy vi-tilde-fringe define-word yapfify xterm-color ws-butler winum which-key volatile-highlights uuidgen use-package toc-org stickyfunc-enhance srefactor spaceline shell-pop reveal-in-osx-finder restart-emacs request rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el pbcopy paradox osx-trash osx-dictionary org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text macrostep lorem-ipsum live-py-mode linum-relative link-hint launchctl info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot git-gutter-fringe git-gutter-fringe+ fuzzy flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks elisp-slime-nav dumb-jump disaster diff-hl cython-mode company-statistics company-quickhelp company-c-headers company-anaconda column-enforce-mode cmake-mode clean-aindent-mode clang-format beacon auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+ )
